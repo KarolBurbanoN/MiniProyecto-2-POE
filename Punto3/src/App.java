@@ -5,10 +5,11 @@ import javax.swing.*;
 public class App extends JFrame {
 
     private JFrame frame;
-    private JPanel panelI, panelD, panelS, panelBackground, panelDesplegado;
+    private JPanel panelI, panelS, panelC, panelBackground, panelDesplegado;
     private Point initialClick;
     private Dimension initialSize;
     private boolean isResizing = false;
+    Font fuente = new Font("Aptos",Font.BOLD, 13);
 
     public App() {
         frame = new JFrame("Visual Studio");
@@ -21,8 +22,8 @@ public class App extends JFrame {
 
         panelBackground = new JPanel();
         panelI = new JPanel();
-        panelD = new JPanel();
         panelS = new JPanel();
+        panelC = new JPanel();
         panelDesplegado = new JPanel();
 
         componentes();
@@ -33,6 +34,7 @@ public class App extends JFrame {
         panelIzquierdo();
         panelSuperior();
         panelDesplegado();
+        panelCentral();
     }
 
     private void panelBackground(){
@@ -51,21 +53,47 @@ public class App extends JFrame {
         botonesPanelIzquierdo();
     }
 
+
     private void panelSuperior() {
-        panelS.setBackground(new Color(28, 28, 28));
+        panelS.setBackground(new Color(24, 24, 24));
         panelS.setBounds(0, 0, 800, 30);
         panelS.setLayout(null);
 
         ImageIcon icon = new ImageIcon("iconos/Visual_icon.png"); // Cambia la ruta por la ubicación de tu imagen
         JLabel visual = new JLabel();
 
+
         visual.setBounds(10, 7, 20, 20);
         visual.setIcon(new ImageIcon(icon.getImage().getScaledInstance(visual.getWidth(),visual.getHeight(), Image.SCALE_SMOOTH)));
 
         panelBackground.add(panelS);
-        panelS.add(visual);
+        panelS.add(visual); 
 
     }
+
+    private void panelCentral(){
+        panelC.setBackground(new Color(28, 28, 28));
+        panelC.setBounds(55, 30, 745, 726);
+        panelC.setLayout(null);
+        panelBackground.add(panelC);
+
+        JTextArea textArea = new JTextArea();
+        textArea.setFont(new Font("Aptos",Font.PLAIN,17));
+        textArea.setBackground(new Color(28,28,28));
+        textArea.setForeground(Color.WHITE); // Cambia el color del texto a blanco
+
+        JScrollPane scroll = new JScrollPane(textArea);
+        scroll.setBounds(0, 0, 730, 656);
+        scroll.setPreferredSize(new Dimension(10, 65)); // Establece un tamaño preferido para el JScrollPane
+
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.getHorizontalScrollBar().setUnitIncrement(16);
+        scroll.getVerticalScrollBar().setUI(new Scroll());
+        scroll.getHorizontalScrollBar().setUI(new Scroll());
+        panelC.add(scroll);
+
+    }
+
 
     private void botonesPanelIzquierdo() {
         ImageIcon icono = new ImageIcon("iconos/Explorer.png"); // Cambia la ruta por la ubicación de tu imagen
@@ -291,7 +319,7 @@ public class App extends JFrame {
             }
 
             public void mouseClicked(MouseEvent e) {
-                mostrarMenuDesplegable(Additional);
+                MenuDesplegableAdditional(Additional);
             }
         });
 
@@ -317,7 +345,7 @@ public class App extends JFrame {
             }
 
             public void mouseClicked(MouseEvent e) {
-                mostrarMenuDesplegable(Account);
+                MenuDesplegableAccount(Account);
             }
         });
 
@@ -343,7 +371,7 @@ public class App extends JFrame {
             }
 
             public void mouseClicked(MouseEvent e) {
-                mostrarMenuDesplegable(Config);
+                MenuDesplegableConfig(Config);
             }
             
         });
@@ -360,20 +388,178 @@ public class App extends JFrame {
         panelI.add(Config);
     }
 
-    private void mostrarMenuDesplegable(Component invoker) {
+    private void MenuDesplegableAdditional(Component invoker) {
         JPopupMenu menu = new JPopupMenu();
 
-        JMenuItem item1 = new JMenuItem("Live Share");
-        JMenuItem item2 = new JMenuItem("Sourcery");
-        JMenuItem item3 = new JMenuItem("Abstra");
-        JMenuItem item4 = new JMenuItem("GitLens");
+        menu.setBackground(new Color(28, 28, 28)); // Establecer el color de fondo del menú desplegable
+        
+
+        JMenuItem item1 = new JMenuItem("       Live Share");
+        item1.setForeground(Color.WHITE); 
+        item1.setBackground(new Color(28, 28, 28)); 
+        item1.setFont(fuente);
+        item1.addActionListener(e -> System.out.println("Live Share selected"));
+
+        JMenuItem item2 = new JMenuItem("       Sourcery");
+        item2.setForeground(Color.WHITE);
+        item2.setBackground(new Color(28, 28, 28));
+        item2.setFont(fuente);
+        item2.addActionListener(e -> System.out.println("Sourcery selected"));
+
+        JMenuItem item3 = new JMenuItem("       Abstra");
+        item3.setForeground(Color.WHITE);
+        item3.setBackground(new Color(28, 28, 28));
+        item3.setFont(fuente);
+        item3.addActionListener(e -> System.out.println("Abstra selected"));
+
+        JMenuItem item4 = new JMenuItem("       GitLens");
+        item4.setForeground(Color.WHITE);
+        item4.setBackground(new Color(28, 28, 28));
+        item4.setFont(fuente);
+        item4.addActionListener(e -> System.out.println("GitLens selected"));
 
         menu.add(item1);
         menu.add(item2);
         menu.add(item3);
         menu.add(item4);
 
+        menu.setBackground(Color.BLACK);
+
+    
+        // Personalizar el tamaño
+        menu.setPreferredSize(new Dimension(185, 130));
+
         menu.show(invoker, 0, invoker.getHeight());
+        
+    }
+
+    private void MenuDesplegableAccount(Component invoker) {
+        JPopupMenu menu = new JPopupMenu();
+
+        menu.setBackground(new Color(28, 28, 28)); // Establecer el color de fondo del menú desplegable
+        
+
+        JMenuItem item1 = new JMenuItem("       Account Login");
+        item1.setForeground(Color.WHITE); 
+        item1.setBackground(new Color(28, 28, 28)); 
+        item1.setFont(fuente);
+        item1.addActionListener(e -> System.out.println("Login selected"));
+
+        JMenuItem item2 = new JMenuItem("       Backup and Sync Settings...");
+        item2.setForeground(Color.WHITE);
+        item2.setBackground(new Color(28, 28, 28)); 
+        item2.setFont(fuente);
+        item2.addActionListener(e -> System.out.println("Settings selected"));
+
+        JMenuItem item3 = new JMenuItem("       Turn on Cloud Changes...");
+        item3.setForeground(Color.WHITE);
+        item3.setBackground(new Color(28, 28, 28));
+        item3.setFont(fuente);
+        item3.addActionListener(e -> System.out.println("Turn on Cloud Changes selected"));
+
+        JMenuItem item4 = new JMenuItem("       Turn on Remote Tunnel Access...");
+        item4.setForeground(Color.WHITE);
+        item4.setBackground(new Color(28, 28, 28));
+        item4.setFont(fuente);
+        item4.addActionListener(e -> System.out.println("Turn on Remote Tunnel Acces"));
+
+        JMenuItem item5 = new JMenuItem("       Sign in with tabnine to use Tabnine AI (1)");
+        item5.setForeground(Color.WHITE);
+        item5.setBackground(new Color(28, 28, 28));
+        item5.setFont(fuente);
+        item5.addActionListener(e -> System.out.println("Tabnine AI selected"));
+
+        menu.add(item1);
+        menu.add(item2);
+        menu.add(item3);
+        menu.add(item4);
+        menu.add(item5);
+
+        menu.setBackground(Color.BLACK);
+
+        // Personalizar el tamaño
+        menu.setPreferredSize(new Dimension(350, 150));
+
+        menu.show(invoker.getParent(), invoker.getWidth(), invoker.getY());
+        
+    }
+
+    private void MenuDesplegableConfig(Component invoker) {
+        JPopupMenu menu = new JPopupMenu();
+
+        menu.setBackground(new Color(28, 28, 28)); // Establecer el color de fondo del menú desplegable
+        
+
+        JMenuItem item1 = new JMenuItem("       Command Palette...");
+        item1.setForeground(Color.WHITE); 
+        item1.setBackground(new Color(28, 28, 28)); 
+        item1.addActionListener(e -> System.out.println("Command Palette selected"));
+
+        JMenuItem item2 = new JMenuItem("       Profiles (Default)");
+        item2.setForeground(Color.WHITE);
+        item2.setBackground(new Color(28, 28, 28)); 
+        item2.addActionListener(e -> System.out.println("Sourcery selected"));
+
+        JMenuItem item3 = new JMenuItem("       Settings");
+        item3.setForeground(Color.WHITE);
+        item3.setBackground(new Color(28, 28, 28));
+        item3.addActionListener(e -> System.out.println("Settings selected"));
+
+        JMenuItem item4 = new JMenuItem("       Extensions");
+        item4.setForeground(Color.WHITE);
+        item4.setBackground(new Color(28, 28, 28));
+        item4.addActionListener(e -> System.out.println("Extensions selected"));
+
+        JMenuItem item5 = new JMenuItem("       Keyboard Shortcuts");
+        item5.setForeground(Color.WHITE);
+        item5.setBackground(new Color(28, 28, 28));
+        item5.addActionListener(e -> System.out.println("Keyboard Shortcuts selected"));
+
+        JMenuItem item6 = new JMenuItem("       User Snippets");
+        item6.setForeground(Color.WHITE);
+        item6.setBackground(new Color(28, 28, 28));
+        item6.addActionListener(e -> System.out.println("User Snippets selected"));
+
+        JMenuItem item7 = new JMenuItem("       User Tasks");
+        item7.setForeground(Color.WHITE);
+        item7.setBackground(new Color(28, 28, 28));
+        item7.addActionListener(e -> System.out.println("User Tasks selected"));
+
+        JMenuItem item8 = new JMenuItem("       Themes");
+        item8.setForeground(Color.WHITE);
+        item8.setBackground(new Color(28, 28, 28));
+        item8.addActionListener(e -> System.out.println("Themes selected"));
+
+        JMenuItem item9 = new JMenuItem("       Backup and Sync Settings...");
+        item9.setForeground(Color.WHITE);
+        item9.setBackground(new Color(28, 28, 28));
+        item9.addActionListener(e -> System.out.println("Settings selected"));
+
+        JMenuItem item10 = new JMenuItem("      Check for updates...");
+        item10.setForeground(Color.WHITE);
+        item10.setBackground(new Color(28, 28, 28));
+        item10.addActionListener(e -> System.out.println("Check for updates selected"));
+
+        menu.add(item1);
+        menu.add(item2);
+        menu.add(item3);
+        menu.add(item4);
+        menu.add(item5);
+        menu.add(item6);
+        menu.add(item7);
+        menu.add(item8);
+        menu.add(item9);
+        menu.add(item10);
+
+
+        menu.setBackground(Color.BLACK);
+
+    
+        // Personalizar el tamaño
+        menu.setPreferredSize(new Dimension(300, 350));
+
+        menu.show(invoker.getParent(), invoker.getWidth(), invoker.getY());
+        
     }
     
     
