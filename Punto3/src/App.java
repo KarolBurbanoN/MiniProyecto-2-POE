@@ -326,10 +326,13 @@ public class App extends JFrame {
 
         Source_Control.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                ajustarPaneles();
+                togglePanelDesplegado();
+                if (panelDesplegado.isVisible()) {
+                    botonesPanelSource();
+                }
             }
         });
+
         Source_Control.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 Source_Control.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -353,10 +356,13 @@ public class App extends JFrame {
 
         Run_Debug.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                ajustarPaneles();
+                togglePanelDesplegado();
+                if (panelDesplegado.isVisible()) {
+                    botonesPanelRun();
+                }
             }
         });
+
         Run_Debug.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 Run_Debug.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -381,8 +387,10 @@ public class App extends JFrame {
 
         Extensions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                ajustarPaneles();
+                togglePanelDesplegado();
+                if (panelDesplegado.isVisible()) {
+                    botonesPanelExtensions();
+                }
             }
         });
         Extensions.addMouseListener(new MouseAdapter() {
@@ -408,10 +416,13 @@ public class App extends JFrame {
         
         Testing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                ajustarPaneles();
+                togglePanelDesplegado();
+                if (panelDesplegado.isVisible()) {
+                    botonesPanelTesting();
+                }
             }
         });
+
         Testing.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 Testing.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -435,8 +446,10 @@ public class App extends JFrame {
 
         Tabnine_AI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                ajustarPaneles();
+                togglePanelDesplegado();
+                if (panelDesplegado.isVisible()) {
+                    botonesPanelTabnine();
+                }
             }
         });
         Tabnine_AI.addMouseListener(new MouseAdapter() {
@@ -480,7 +493,7 @@ public class App extends JFrame {
         ImageIcon iconoe9 = new ImageIcon(imagen9);
 
         JButton Account = new JButton(iconoe9);
-        Account.setBounds(0, 570, 55, 55); 
+        Account.setBounds(0, 585, 55, 55); 
         Account.setPreferredSize(new Dimension(iconoe.getIconWidth(), iconoe.getIconHeight()));
         Account.setBorderPainted(false);
         Account.setFocusPainted(false);
@@ -506,7 +519,7 @@ public class App extends JFrame {
         ImageIcon iconoe10 = new ImageIcon(imagen10);
 
         JButton Config = new JButton(iconoe10);
-        Config.setBounds(0, 620, 55, 55); 
+        Config.setBounds(0, 635, 55, 55); 
         Config.setPreferredSize(new Dimension(iconoe.getIconWidth(), iconoe.getIconHeight()));
         Config.setBorderPainted(false);
         Config.setFocusPainted(false);
@@ -822,6 +835,120 @@ public class App extends JFrame {
         replaceField.setBorder(null);
         replaceField.setForeground(Color.WHITE);
         panelDesplegado.add(replaceField);
+    }
+
+    private void botonesPanelSource(){
+        JLabel sourceLabel = new JLabel("SOURCE CONTROL");
+        sourceLabel.setForeground(Color.WHITE);
+        sourceLabel.setBounds(15, 10, 120, 20);
+        panelDesplegado.add(sourceLabel);
+
+        JLabel sourceLabel1 = new JLabel("You can directly publish this folder");
+        sourceLabel1.setForeground(Color.WHITE);
+        sourceLabel1.setBounds(15, 40, 235, 20);
+        panelDesplegado.add(sourceLabel1);
+
+        JLabel sourceLabel2 = new JLabel("to a GitHub repository.");
+        sourceLabel2.setForeground(Color.WHITE);
+        sourceLabel2.setBounds(15, 60, 235, 20);
+        panelDesplegado.add(sourceLabel2);
+
+        JButton GitHub = new JButton("Publish to GitHub");
+        GitHub.setBounds(35, 100, 170, 30); 
+        GitHub.setBackground(Color.BLUE);
+        GitHub.setForeground(Color.WHITE);
+        panelDesplegado.add(GitHub);
+    
+    }
+
+    private void botonesPanelRun(){
+        JLabel runLabel = new JLabel("RUN AND DEBUG");
+        runLabel.setForeground(Color.WHITE);
+        runLabel.setBounds(15, 10, 120, 20);
+        panelDesplegado.add(runLabel);
+
+        JLabel runLabel2 = new JLabel("...");
+        runLabel2.setForeground(Color.WHITE);
+        runLabel2.setBounds(230, 7, 80, 20);
+        panelDesplegado.add(runLabel2);
+
+        JButton run = new JButton("Run and Debug");
+        run.setBounds(35, 50, 170, 30); 
+        run.setBackground(Color.BLUE);
+        run.setForeground(Color.WHITE);
+        panelDesplegado.add(run);
+    
+    }
+
+    private void botonesPanelExtensions(){
+        JLabel extensionsLabel = new JLabel("EXTENSIONS");
+        extensionsLabel.setForeground(Color.WHITE);
+        extensionsLabel.setBounds(15, 10, 80, 20);
+        panelDesplegado.add(extensionsLabel);
+
+        ImageIcon icon = new ImageIcon("iconos/ButtonSearch.png"); // Cambia la ruta por la ubicación de tu imagen
+        JLabel icons = new JLabel();
+        icons.setBounds(100, 10, 135, 20);
+        icons.setIcon(new ImageIcon(icon.getImage().getScaledInstance(icons.getWidth(),icons.getHeight(), Image.SCALE_SMOOTH)));
+        panelDesplegado.add(icons);
+
+        JTextField searchField = new JTextField("Search Extensions");
+        searchField.setBounds(15, 40, 225, 30);
+        searchField.setBackground(new Color(40,40,40));
+        searchField.setBorder(null);
+        searchField.setForeground(Color.WHITE); // Cambia el color del texto a blanco
+        panelDesplegado.add(searchField);
+
+    }
+
+    private void botonesPanelTesting(){
+        JLabel testingLabel = new JLabel("TESTING");
+        testingLabel.setForeground(Color.WHITE);
+        testingLabel.setBounds(15, 10, 120, 20);
+        panelDesplegado.add(testingLabel);
+
+        ImageIcon icon = new ImageIcon("iconos/ButtonTesting.png"); // Cambia la ruta por la ubicación de tu imagen
+        JLabel icons = new JLabel();
+        icons.setBounds(80, 10, 150, 20);
+        icons.setIcon(new ImageIcon(icon.getImage().getScaledInstance(icons.getWidth(),icons.getHeight(), Image.SCALE_SMOOTH)));
+        panelDesplegado.add(icons);
+
+        JButton button1 = new JButton("Configure Python Tests");
+        button1.setBounds(35, 50, 170, 30); 
+        button1.setBackground(Color.BLUE);
+        button1.setForeground(Color.WHITE);
+        panelDesplegado.add(button1);
+
+        JButton button2 = new JButton("Enable Java Tests");
+        button2.setBounds(35, 90, 170, 30); 
+        button2.setBackground(Color.BLUE);
+        button2.setForeground(Color.WHITE);
+        panelDesplegado.add(button2);
+    
+    }
+
+    private void botonesPanelTabnine(){
+        JLabel tabnineLabel = new JLabel("TABNINE AI: PLEASE LOG IN");
+        tabnineLabel.setForeground(Color.WHITE);
+        tabnineLabel.setBounds(15, 10, 200, 20);
+        panelDesplegado.add(tabnineLabel);
+
+        ImageIcon icon = new ImageIcon("iconos/TabnineImage.png"); // Cambia la ruta por la ubicación de tu imagen
+        JLabel icons = new JLabel();
+        icons.setBounds(15, 25, 135, 50);
+        icons.setIcon(new ImageIcon(icon.getImage().getScaledInstance(icons.getWidth(),icons.getHeight(), Image.SCALE_SMOOTH)));
+        panelDesplegado.add(icons);
+
+        JLabel tabnineLabel2 = new JLabel("Please ensure you're signed in");
+        tabnineLabel2.setForeground(Color.WHITE);
+        tabnineLabel2.setBounds(15, 70, 200, 20);
+        panelDesplegado.add(tabnineLabel2);
+
+        JButton button1 = new JButton("Sign In");
+        button1.setBounds(15, 100, 220, 30); 
+        button1.setBackground(new Color(0, 127, 255));
+        button1.setForeground(Color.WHITE);
+        panelDesplegado.add(button1);
     }
 
     private void ajustarPaneles() {
