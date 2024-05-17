@@ -13,7 +13,7 @@
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import javax.swing.DefaultListModel;
-
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 
@@ -89,7 +89,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
+        
 
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
@@ -107,7 +107,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonActualizar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonActualizar.setContentAreaFilled(false);
         jButtonActualizar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+
 
         jTextFieldBuscar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jTextFieldBuscar.setForeground(new java.awt.Color(51, 51, 51));
@@ -420,6 +420,7 @@ public class ListaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     
+
     //Boton que realiza la funcion de borrar un poducto en el inventario
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
         String inputBorrar = JOptionPane.showInputDialog("Formas de eliminar un producto \n 1. Eliminar por indice\n 2. Eliminar por codigo\n Escoge el numero de la manera que quieres eliminar el producto: ");
@@ -437,7 +438,7 @@ public class ListaJPanel extends javax.swing.JPanel {
                 if (opcion == 1) {
                     eliminarPorIndice();
                 } else if (opcion == 2) {
-                    //eliminarPorCodigo();
+                    eliminarPorCodigo();
                 } else {
                     throw new InputMismatchException("Dato incorrecto, Opcion invalida");
                 }
@@ -451,8 +452,6 @@ public class ListaJPanel extends javax.swing.JPanel {
         
 
     }//GEN-LAST:event_jButtonBorrarActionPerformed
-
-    
 
     //Boton que permite añadir un producto en el inventario 
     private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
@@ -540,7 +539,7 @@ public class ListaJPanel extends javax.swing.JPanel {
     
     //Funcion que elimina los productos por el indice
     public void eliminarPorIndice() {
-        String indiceEliminar =JOptionPane.showInputDialog("Ingrese el índice del producto a eliminar (recuerda que el indice empieza desde 0):");
+        String indiceEliminar =JOptionPane.showInputDialog("Ingrese el índice del producto a eliminar (recuerda que empieza desde 0):");
 
         if (indiceEliminar == null || indiceEliminar.isEmpty()) {
             //Muestra el mensaje cuando se cancela la operación o el campo se encuentre vacio
@@ -565,7 +564,50 @@ public class ListaJPanel extends javax.swing.JPanel {
         }
     }
     
+    //Funcion que elimina el producto por el codigo
+    public void eliminarPorCodigo() {
+        String codigoEliminar = JOptionPane.showInputDialog("Ingrese el codigo del producto a eliminar: ");
+        
+        if (codigoEliminar == null || codigoEliminar.isEmpty()) {
+            //Muestra el mensaje cuando se cancela la operación o el campo se encuentra vacio
+            JOptionPane.showMessageDialog(null, "Operación cancelada  o el campo se encuentra vacio.", "Advertencia", JOptionPane.CANCEL_OPTION);
+        }else {
+            try {
+                int codigo = Integer.parseInt(codigoEliminar);
+                infoVacio();
+                Producto productoBuscado = null;
+                boolean productoExiste = false;
+                for (Producto producto : productos) {
+                    if (producto.getCodigo() == codigo) {
+                        productoExiste = true;
+                        productoBuscado = producto;
+                        break;
+                    }
+                }
+                if(!productoExiste){
+                        throw new ProductNotFoundException("Producto no encontrado");
+                }
+                
+                if (productoBuscado !=null) {
+                // Eliminar producto por su codigo
+                    productos.remove(productoBuscado);
+                    JOptionPane.showMessageDialog(null, "Producto eliminado.", "Eliminacion realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);    
+                    
+                }
+            }catch (IllegalStateException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!!!", JOptionPane.INFORMATION_MESSAGE);
+            }catch(ProductNotFoundException e) { 
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!!!", JOptionPane.WARNING_MESSAGE);
+            }catch (ArrayIndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null, "Indice invalido","Error", JOptionPane.ERROR_MESSAGE);
+            }
+            listarInventario();
+        }
+    }
+
     
+    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActualizar;
