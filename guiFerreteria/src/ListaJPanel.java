@@ -89,7 +89,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+
 
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
@@ -97,7 +97,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("buscar.png"))); // NOI18N
         jButtonBuscar.setBorderPainted(false);
         jButtonBuscar.setContentAreaFilled(false);
-        
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
 
         jButtonActualizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonActualizar.setForeground(new java.awt.Color(51, 0, 51));
@@ -107,7 +111,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonActualizar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonActualizar.setContentAreaFilled(false);
         jButtonActualizar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
+        jButtonActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonActualizarActionPerformed(evt);
+            }
+        });
 
         jTextFieldBuscar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jTextFieldBuscar.setForeground(new java.awt.Color(51, 51, 51));
@@ -419,7 +427,12 @@ public class ListaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
+
+
+    //Boton que actualiza los datos de un producto
+    private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
+        modificarProducto();
+    }//GEN-LAST:event_jButtonActualizarActionPerformed
 
     //Boton que realiza la funcion de borrar un poducto en el inventario
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
@@ -452,6 +465,18 @@ public class ListaJPanel extends javax.swing.JPanel {
         
 
     }//GEN-LAST:event_jButtonBorrarActionPerformed
+
+    //Boton que permite buscar un producto en el inventario por el codigo
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        try{
+            String codigo = jTextFieldBuscar.getText();
+            int codigoBuscar = Integer.parseInt(codigo);
+            buscarProductoPorCodigo(codigoBuscar);
+        }catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Por favor ingresa un codigo del producto válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     //Boton que permite añadir un producto en el inventario 
     private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
@@ -605,7 +630,160 @@ public class ListaJPanel extends javax.swing.JPanel {
         }
     }
 
+    //Funcion de una excepcion para cuando se cancela o se acepte un campo vacio
+    public void campoVaciocancelado(String campo){
+        if (campo == null || campo.isEmpty()) {
+            //Muestra el mensaje cuando se cancela la operación o el campo se encuentra vacio
+            throw new InputMismatchException("Operación cancelada  o el campo se encuentra vacio.");
+        }
+    }
+
+    //Funcion que modifica el producto
+    public void modificarProducto() {
+        String codigo = JOptionPane.showInputDialog("Ingrese el código del producto a modificar:");
+        if (codigo == null || codigo.isEmpty() ) {
+            //Muestra el mensaje cuando se cancela la operación o el campo se encuentre vacio
+            JOptionPane.showMessageDialog(null, "Operación cancelada o el campo se encuentra vacio.", "Advertencia", JOptionPane.CANCEL_OPTION);
+        }else {
+            try {
+                int codigoModificar = Integer.parseInt(codigo);
+                infoVacio();
+                // Buscar el producto por su código
+                Producto productoModificado = null;
+                for (Producto producto : productos) {
+                    if (producto.getCodigo() == codigoModificar) {
+                        productoModificado = producto;
+                        break;
+                    }
+                }
+
+                // Si no se encontró el producto, mostrar un mensaje y salir del método
+                if (productoModificado == null) {
+                    JOptionPane.showMessageDialog(null, "Producto no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Pedir al usuario qué campo desea modificar
+                String[] opciones = {"Nombre", "Descripción", "Precio", "Cantidad", "Material", "Ejemplos", "Herramienta", "Categoría"};
+                String opcionSeleccionada = (String) JOptionPane.showInputDialog(null, "Seleccione el campo que desea modificar:",
+                        "Modificar Producto", JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+                if (opcionSeleccionada == null) {
+                    //Muestra el mensaje cuando se cancela la operación
+                    JOptionPane.showMessageDialog(null, "Operación cancelada.", "Advertencia", JOptionPane.CANCEL_OPTION);
+                }else {
+
+                    // Modificar el campo seleccionado
+                    switch (opcionSeleccionada) {
+                        case "Nombre":
+                            String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
+                            campoVaciocancelado(nuevoNombre);
+                            productoModificado.setNombre(nuevoNombre);
+                            break;
+                            
+                            
+                        case "Descripción":
+                            String nuevaDescripcion = JOptionPane.showInputDialog("Ingrese la nueva descripción:");
+                            campoVaciocancelado(nuevaDescripcion);
+                            productoModificado.setDescripcion(nuevaDescripcion);
+                            break;
+                        case "Precio":
+
+                            int nuevoPrecio = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el nuevo precio:"));
+                            
+                            if (nuevoPrecio < 0) {
+                                throw new InputMismatchException("Número de precio inválido. Debe ser mayor que cero y no puede estar vacio.");
+                            } 
+                            productoModificado.setPrecio(nuevoPrecio);
+                            break;
+                        case "Cantidad":
+                            int nuevaCantidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la nueva cantidad:"));
+                            if (nuevaCantidad < 0) {
+                                throw new InputMismatchException("Número de cantidad inválido. Debe ser mayor que cero y no puede estar vacio.");
+                            }  
+                            productoModificado.setCantidad(nuevaCantidad);
+                            break;
+                        case "Material":
+                            String nuevoMaterial = JOptionPane.showInputDialog("Ingrese el nuevo material:");
+                            campoVaciocancelado(nuevoMaterial); 
+                            productoModificado.setMaterial(nuevoMaterial);
+                            
+                            break;
+                        case "Ejemplos":
+                            String nuevosEjemplos = JOptionPane.showInputDialog("Ingrese los nuevos ejemplos:");
+                            campoVaciocancelado(nuevosEjemplos);
+                            productoModificado.setEjemplos(nuevosEjemplos);
+                            
+                            break;
+                        case "Herramienta":
+                            String nuevaHerramienta = JOptionPane.showInputDialog("Ingrese la nueva herramienta:");
+                            campoVaciocancelado(nuevaHerramienta);
+                            productoModificado.setHerramienta(nuevaHerramienta);
+                            
+                            break;
+                        case "Categoría":
+                            
+                            // Crear un JComboBox con las opciones de categoría
+                            String[] opcionesCategoria = {"Cuerdas y amarres", "Abrasivos y silicona", "Adhesivos, lubricantes, pegantes ", "Grifos y valvulas", "Pinturas", "Electricos", "Tubos y Accesorios PVC", "Herramientas manuales", "Herrajes y cerraduras ", "Ferreteria especial", "Discos", "Seguridad industrial", "Agro y construccion"};
+                            
+                            JComboBox<String> comboBoxCategoria = new JComboBox<>(opcionesCategoria);
+                            // Mostrar el JComboBox en un JOptionPane
+                            JOptionPane.showMessageDialog(null, comboBoxCategoria, "Seleccione la nueva categoría:", JOptionPane.QUESTION_MESSAGE);
+                            
+                            // Obtener la categoría seleccionada del JComboBox
+                            String nuevaCategoria = (String) comboBoxCategoria.getSelectedItem();
+                            
+                            // Actualizar la categoría del producto
+                            productoModificado.setCategoria(nuevaCategoria);
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Opción inválida.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                    }
+
+                    // Mostrar un mensaje de éxito
+                    JOptionPane.showMessageDialog(null, "Producto modificado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (IllegalStateException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!", JOptionPane.INFORMATION_MESSAGE);
+            }catch (InputMismatchException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "El dato ingresado debe ser numerico");
+            }
+        // Listar el inventario actualizado
+        listarInventario();
+        }   
+    }
     
+
+    //Funcion para buscar por codigo el producto
+    public void buscarProductoPorCodigo(int codigoBusqueda) {
+
+        try {
+            infoVacio();
+            Producto productoBuscado = null;
+            boolean productoExiste = false;
+            for (Producto producto : productos) {
+                if (producto.getCodigo() == codigoBusqueda) {
+                    productoExiste = true;
+                    productoBuscado = producto;
+                    break;
+                }
+            }
+            if (productoBuscado != null) {
+                JOptionPane.showMessageDialog(null, "Producto encontrado", "Consulta realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Datos del producto buscado: \n"+ productoBuscado.getDatos());
+            } 
+            if(!productoExiste){
+                throw new ProductNotFoundException("Producto no encontrado");
+            }
+        }catch (IllegalStateException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!", JOptionPane.INFORMATION_MESSAGE);
+        }catch(ProductNotFoundException e) { 
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!", JOptionPane.WARNING_MESSAGE);
+        }
+    
+    }
     
 
 
