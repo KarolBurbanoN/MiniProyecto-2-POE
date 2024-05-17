@@ -97,7 +97,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("buscar.png"))); // NOI18N
         jButtonBuscar.setBorderPainted(false);
         jButtonBuscar.setContentAreaFilled(false);
-        
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
 
         jButtonActualizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonActualizar.setForeground(new java.awt.Color(51, 0, 51));
@@ -453,6 +457,18 @@ public class ListaJPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButtonBorrarActionPerformed
 
+    //Boton que permite buscar un producto en el inventario por el codigo
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        try{
+            String codigo = jTextFieldBuscar.getText();
+            int codigoBuscar = Integer.parseInt(codigo);
+            buscarProductoPorCodigo(codigoBuscar);
+        }catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Por favor ingresa un codigo del producto válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
+
     //Boton que permite añadir un producto en el inventario 
     private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
         
@@ -603,9 +619,36 @@ public class ListaJPanel extends javax.swing.JPanel {
             }
             listarInventario();
         }
-    }
+    }    
 
+    //Funcion para buscar por codigo el producto
+    public void buscarProductoPorCodigo(int codigoBusqueda) {
+
+        try {
+            infoVacio();
+            Producto productoBuscado = null;
+            boolean productoExiste = false;
+            for (Producto producto : productos) {
+                if (producto.getCodigo() == codigoBusqueda) {
+                    productoExiste = true;
+                    productoBuscado = producto;
+                    break;
+                }
+            }
+            if (productoBuscado != null) {
+                JOptionPane.showMessageDialog(null, "Producto encontrado", "Consulta realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Datos del producto buscado: \n"+ productoBuscado.getDatos());
+            } 
+            if(!productoExiste){
+                throw new ProductNotFoundException("Producto no encontrado");
+            }
+        }catch (IllegalStateException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!", JOptionPane.INFORMATION_MESSAGE);
+        }catch(ProductNotFoundException e) { 
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!", JOptionPane.WARNING_MESSAGE);
+        }
     
+    }
     
 
 
