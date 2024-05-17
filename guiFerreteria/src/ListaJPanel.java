@@ -13,7 +13,7 @@
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
+
 import javax.swing.JOptionPane;
 
 
@@ -89,7 +89,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+
 
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
@@ -107,7 +107,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonActualizar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonActualizar.setContentAreaFilled(false);
         jButtonActualizar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
+        
 
         jTextFieldBuscar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jTextFieldBuscar.setForeground(new java.awt.Color(51, 51, 51));
@@ -136,7 +136,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBorrar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonBorrar.setContentAreaFilled(false);
         jButtonBorrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
+        jButtonBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBorrarActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -415,6 +419,40 @@ public class ListaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    //Boton que realiza la funcion de borrar un poducto en el inventario
+    private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
+        String inputBorrar = JOptionPane.showInputDialog("Formas de eliminar un producto \n 1. Eliminar por indice\n 2. Eliminar por codigo\n Escoge el numero de la manera que quieres eliminar el producto: ");
+        //Condicional que valida si cancela la operacion realizada
+        if (inputBorrar == null) {
+            //Muestra el mensaje cuando se cancela la operación
+            JOptionPane.showMessageDialog(null, "Operación cancelada.", "Cancelar", JOptionPane.CANCEL_OPTION);
+        }else if (inputBorrar.isEmpty()) {//Condicional que verifica que al darle ok que el campo no este vacio
+            //En caso de estar vacio le sale la siguiente advertencia
+            JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                //Opciones de como eliminar un producto
+                int opcion = Integer.parseInt(inputBorrar);
+                if (opcion == 1) {
+                    eliminarPorIndice();
+                } else if (opcion == 2) {
+                    //eliminarPorCodigo();
+                } else {
+                    throw new InputMismatchException("Dato incorrecto, Opcion invalida");
+                }
+            //Excepciones en caso de algun error
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InputMismatchException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        } 
+        
+
+    }//GEN-LAST:event_jButtonBorrarActionPerformed
+
+    
 
     //Boton que permite añadir un producto en el inventario 
     private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
@@ -500,7 +538,35 @@ public class ListaJPanel extends javax.swing.JPanel {
         jListProductos.setModel(model);
     }
     
+    //Funcion que elimina los productos por el indice
+    public void eliminarPorIndice() {
+        String indiceEliminar =JOptionPane.showInputDialog("Ingrese el índice del producto a eliminar (recuerda que el indice empieza desde 0):");
+
+        if (indiceEliminar == null || indiceEliminar.isEmpty()) {
+            //Muestra el mensaje cuando se cancela la operación o el campo se encuentre vacio
+            JOptionPane.showMessageDialog(null, "Operación cancelada  o el campo se encuentra vacio.", "Advertencia", JOptionPane.CANCEL_OPTION);
+        }else {
+            try {
+                int indice = Integer.parseInt(indiceEliminar);
+                infoVacio();
+                if (indice < 0 || indice >= productos.size()) {
+                    throw new ArrayIndexOutOfBoundsException("Índice de producto inválido.");
+                }
+                // Eliminar producto por su índice
+                productos.remove((int)indice);
+                JOptionPane.showMessageDialog(null, "Producto eliminado.", "Eliminacion realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (ArrayIndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
+            }catch (IllegalStateException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion!!!", JOptionPane.INFORMATION_MESSAGE);
+            }
+            listarInventario();
+        }
+    }
     
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActualizar;
     private javax.swing.JButton jButtonAñadir;
