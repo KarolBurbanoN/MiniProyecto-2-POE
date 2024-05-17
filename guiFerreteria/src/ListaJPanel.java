@@ -628,6 +628,7 @@ public class ListaJPanel extends javax.swing.JPanel {
             }
             listarInventario();
         }
+
     }
 
     //Funcion de una excepcion para cuando se cancela o se acepte un campo vacio
@@ -754,7 +755,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         listarInventario();
         }   
     }
-    
+
 
     //Funcion para buscar por codigo el producto
     public void buscarProductoPorCodigo(int codigoBusqueda) {
