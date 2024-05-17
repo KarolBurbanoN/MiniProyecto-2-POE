@@ -11,7 +11,9 @@
 
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
+import javax.swing.JOptionPane;
 
 
 
@@ -87,12 +89,14 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         
+
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
 
         jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("buscar.png"))); // NOI18N
         jButtonBuscar.setBorderPainted(false);
         jButtonBuscar.setContentAreaFilled(false);
+
 
         jButtonActualizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonActualizar.setForeground(new java.awt.Color(51, 0, 51));
@@ -117,7 +121,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonAñadir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonAñadir.setContentAreaFilled(false);
         jButtonAñadir.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+        jButtonAñadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAñadirActionPerformed(evt);
+            }
+        });
 
         jButtonBorrar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonBorrar.setForeground(new java.awt.Color(51, 0, 51));
@@ -127,8 +135,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBorrar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonBorrar.setContentAreaFilled(false);
         jButtonBorrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-    
-
+        
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -215,7 +222,11 @@ public class ListaJPanel extends javax.swing.JPanel {
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-
+        jListProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListProductosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jListProductos);
 
         jLabel10.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 12)); // NOI18N
@@ -402,8 +413,74 @@ public class ListaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
 
+    //Boton que permite añadir un producto en el inventario 
+    private void jButtonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAñadirActionPerformed
+        
+        String nombres, descripcion,prec, cant, material, ejemplos, herramienta, categoria, cod; 
+        int precio = 0;
+        int cantidad = 0;
+        int codigo = 0;
+        
+        prec = jTextFieldPrecio.getText();
+        cant = jTextFieldCantidad.getText();
+        cod = jTextFieldCodigo.getText();
+        
+        nombres = jTextFieldNombre.getText();
+        descripcion = jTextAreaDescripcion.getText();
+        material = jTextAreaMaterial.getText();
+        ejemplos = jTextAreaEjemplos.getText();
+        herramienta = jTextAreaHerramienta.getText();
+        categoria = jComboBoxCategoria.getSelectedItem().toString();
+        
+        if (nombres.isEmpty() || descripcion.isEmpty() || prec.isEmpty() || cant.isEmpty() || material.isEmpty() || ejemplos.isEmpty()|| herramienta.isEmpty() || categoria.isEmpty()|| cod.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        String nomb = nombres;
+                        String descrip = descripcion;
+                        precio = Integer.parseInt(prec);
+                        cantidad = Integer.parseInt(cant);
+                        String mat = material;
+                        String ejem = ejemplos;
+                        String herra = herramienta;
+                        String categ = categoria;
+                        codigo = Integer.parseInt(cod);
+
+                        if (precio < 0 || cantidad < 0 || codigo < 0) {
+                            throw new InputMismatchException("Número de precio o de código o de cantidad inválido. Deben ser mayores que cero.");
+                        }
+                        // Verificar si el codigo ya existe en el inventario
+                        for (Producto producto : productos) {
+                            if (producto.getCodigo() == codigo) {
+                                //Si existe le impide agregarlo hasta que escriba otro codigo
+                                JOptionPane.showMessageDialog(null,"El codigo ya existe, debes ingresar otro codigo.", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                        }
+
+                        productos.add(new Producto(nomb,descrip,precio,cantidad,mat,ejem,herra,categ,codigo));
+                        
+                    } catch (InputMismatchException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }catch(NumberFormatException e){
+                        JOptionPane.showMessageDialog(null, "El dato ingresado en precio o cantidad o codigo debe ser numerico");
+                    }
+                }
+        
+    }//GEN-LAST:event_jButtonAñadirActionPerformed
+    //Evento que permite ver mas informacion del producto seleccionado
+    private void jListProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProductosMouseClicked
+        int info = jListProductos.getSelectedIndex();
+        
+        if(info == -1){
+            JOptionPane.showMessageDialog(null, "El inventario se enuentra vacio", "Atencion!!!", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null,productos.get(info).getDatos(),"Mas información sobre el producto", JOptionPane.PLAIN_MESSAGE);
+        }
+    }//GEN-LAST:event_jListProductosMouseClicked
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActualizar;
