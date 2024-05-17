@@ -9,12 +9,19 @@
  */
 
 
-public class ListaJPanel extends javax.swing.JPanel {  
 
+import java.util.ArrayList;
+
+
+
+
+public class ListaJPanel extends javax.swing.JPanel {  
+    //  lista donde se guarda los productos
+    public ArrayList<Producto> productos;
     
     public ListaJPanel() {
         initComponents();
-
+        productos = new ArrayList<>();
     }
     
 
@@ -80,14 +87,12 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         
-
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
 
         jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("buscar.png"))); // NOI18N
         jButtonBuscar.setBorderPainted(false);
         jButtonBuscar.setContentAreaFilled(false);
-
 
         jButtonActualizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonActualizar.setForeground(new java.awt.Color(51, 0, 51));
@@ -112,7 +117,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonAñadir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonAñadir.setContentAreaFilled(false);
         jButtonAñadir.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        ;
+        
 
         jButtonBorrar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonBorrar.setForeground(new java.awt.Color(51, 0, 51));
@@ -122,7 +127,8 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBorrar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonBorrar.setContentAreaFilled(false);
         jButtonBorrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+    
+
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -209,7 +215,7 @@ public class ListaJPanel extends javax.swing.JPanel {
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        
+
         jScrollPane1.setViewportView(jListProductos);
 
         jLabel10.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 12)); // NOI18N
@@ -396,7 +402,6 @@ public class ListaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
     
 
 
