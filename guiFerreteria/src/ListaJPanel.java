@@ -12,7 +12,8 @@
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 
@@ -96,7 +97,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("buscar.png"))); // NOI18N
         jButtonBuscar.setBorderPainted(false);
         jButtonBuscar.setContentAreaFilled(false);
-
+        
 
         jButtonActualizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButtonActualizar.setForeground(new java.awt.Color(51, 0, 51));
@@ -106,7 +107,7 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonActualizar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonActualizar.setContentAreaFilled(false);
         jButtonActualizar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+
 
         jTextFieldBuscar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jTextFieldBuscar.setForeground(new java.awt.Color(51, 51, 51));
@@ -135,7 +136,8 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonBorrar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonBorrar.setContentAreaFilled(false);
         jButtonBorrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        
+
+
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -460,7 +462,7 @@ public class ListaJPanel extends javax.swing.JPanel {
                         }
 
                         productos.add(new Producto(nomb,descrip,precio,cantidad,mat,ejem,herra,categ,codigo));
-                        
+                        listarInventario();
                     } catch (InputMismatchException ex) {
                         JOptionPane.showMessageDialog(null, ex.getMessage());
                     }catch(NumberFormatException e){
@@ -480,8 +482,25 @@ public class ListaJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jListProductosMouseClicked
     
+    //Funcion que comprueba si el inventario esta vacio
+    public void infoVacio() {
+        if (productos.isEmpty()) {
+            throw new IllegalStateException("...El inventario se encuentra vacio...");
+        }
+    }
     
-
+    //Funcion que muestra los productos
+    @SuppressWarnings("unchecked")
+    public void listarInventario() {
+        @SuppressWarnings("rawtypes")
+        DefaultListModel model = new DefaultListModel();
+        for (int i = 0; i < productos.size(); i++) {
+            model.addElement("Indice: "+ i+" | Nombre del producto: "+productos.get(i).getNombre()+" | Descripcion del producto: "+ productos.get(i).getDescripcion()+" | Precio del producto: "+productos.get(i).getPrecio()+" | Cantidad en stock del producto: "+productos.get(i).getCantidad());
+        }
+        jListProductos.setModel(model);
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActualizar;
     private javax.swing.JButton jButtonAñadir;
