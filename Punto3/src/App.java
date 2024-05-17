@@ -5,7 +5,11 @@ import javax.swing.*;
 public class App extends JFrame {
 
     private JFrame frame;
-    private JPanel panelI, panelS, panelC, panelBackground, panelDesplegado;
+    private JPanel panelI, panelS, panelC, panelBackground, panelDesplegado, panelTerminal;
+    private JTextArea terminalTextArea;
+    private boolean isMaximized = false;
+    private boolean resizing = false;
+    private int prevMouseY;
     private Point initialClick;
     private Dimension initialSize;
     private boolean isResizing = false;
@@ -25,6 +29,7 @@ public class App extends JFrame {
         panelS = new JPanel();
         panelC = new JPanel();
         panelDesplegado = new JPanel();
+        panelTerminal = new JPanel(); // Panel de la terminal
 
         componentes();
     }
@@ -34,6 +39,7 @@ public class App extends JFrame {
         panelIzquierdo();
         panelSuperior();
         panelDesplegado();
+        panelTerminal();
         panelCentral();
     }
 
@@ -62,6 +68,7 @@ public class App extends JFrame {
         ImageIcon icon = new ImageIcon("iconos/Visual_icon.png"); // Cambia la ruta por la ubicación de tu imagen
         JLabel visual = new JLabel();
 
+        botonesPanelSuperior();
 
         visual.setBounds(10, 7, 20, 20);
         visual.setIcon(new ImageIcon(icon.getImage().getScaledInstance(visual.getWidth(),visual.getHeight(), Image.SCALE_SMOOTH)));
@@ -92,6 +99,164 @@ public class App extends JFrame {
         scroll.getHorizontalScrollBar().setUI(new Scroll());
         panelC.add(scroll);
 
+    }
+
+    private void botonesPanelSuperior() {
+        agregarBotonConMenu("File", 55, 55, new String[]{
+            "New Text File                                       Ctrl+N",
+            "New File                      Ctrl+Alt+Windows+N",
+            "New Window                             Ctrl+Shift+N"
+        });
+        agregarBotonConMenu("Edit", 115, 60, new String[]{
+            "Undo                                                     Ctrl+Z",
+            "Redo                                                     Ctrl+Y",
+            "Cut                                                        Ctrl+X ",
+            "Copy                                                     Ctrl+C",
+            "Paste                                                     Ctrl+V"
+        });
+        agregarBotonConMenu("Selection", 175, 90, new String[]{
+            "Select All                                               Ctrl+A",
+            "Expand Selection       Shift+Alt+RightArrow",
+            "Shrink Selection            Shift+Alt+leftArrow"
+        });
+        agregarBotonConMenu("View", 265, 70, new String[]{
+            "Command Palette                      Ctrl+Shift+P",
+            "Open View..."
+        });
+        agregarBotonConMenu("Go", 325, 60, new String[]{
+            "Back                                         Alt+LeftArrow",
+            "Foward                                  Alt+RightArrow",
+            "Last Edit Location                  Ctrl+K Ctrl+Q"
+        });
+        agregarBotonConMenu("Run", 365, 60, new String[]{
+            "Start Debugging                                        F5",
+            "Run Without Debugging                  Ctrl+F5",
+            "Stop Debugging                              Shift+F5",
+            "Restart Debugging                  Ctrl+Shift+F5"
+        });
+        agregarBotonConMenu("...", 425, 70, new String[]{
+            "Terminal", "Help"
+        });
+        
+    }
+
+    private void agregarBotonConMenu(String titulo, int x, int ancho, String[] opciones) {
+        JButton boton = new JButton(titulo);
+        boton.setBounds(x, 5, ancho, 20);
+        boton.setBackground(new Color(28, 28, 28));
+        boton.setForeground(Color.GRAY);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(false);
+        boton.setHorizontalAlignment(SwingConstants.LEFT);
+    
+        JPopupMenu menu = new JPopupMenu();
+        menu.setBackground(new Color(28, 28, 28)); // Establecer el color de fondo del menú desplegable
+    
+        for (String opcion : opciones) {
+            if (opcion.equals("Terminal")) {
+                JMenu terminalMenu = new JMenu("Terminal");
+                terminalMenu.setForeground(Color.WHITE);
+                terminalMenu.setBackground(new Color(28, 28, 28));
+                terminalMenu.setPreferredSize(new Dimension(150, 30));
+                
+                JMenuItem newTerminal = new JMenuItem("New Terminal                          Ctrl+Shift+ñ");
+                newTerminal.setForeground(Color.WHITE);
+                newTerminal.setBackground(new Color(28, 28, 28));
+                newTerminal.addActionListener(e -> toggleTerminalPanel());
+                newTerminal.setPreferredSize(new Dimension(250, 30));
+                terminalMenu.add(newTerminal);
+                
+                JMenuItem splitTerminal = new JMenuItem("Split Terminal                          Ctrl+Shift+5");
+                splitTerminal.setForeground(Color.WHITE);
+                splitTerminal.setBackground(new Color(28, 28, 28));
+                splitTerminal.addActionListener(e -> System.out.println("Split Terminal selected"));
+                splitTerminal.setPreferredSize(new Dimension(250, 30));
+                terminalMenu.add(splitTerminal);
+                
+                menu.add(terminalMenu);
+            } else if (opcion.equals("Help")) {
+                JMenu helpMenu = new JMenu("Help");
+                helpMenu.setForeground(Color.WHITE);
+                helpMenu.setBackground(new Color(28, 28, 28));
+                
+                JMenuItem welcome = new JMenuItem("Welcome");
+                welcome.setForeground(Color.WHITE);
+                welcome.setBackground(new Color(28, 28, 28));
+                welcome.addActionListener(e -> System.out.println("Welcome selected"));
+                welcome.setPreferredSize(new Dimension(250, 30));
+                helpMenu.add(welcome);
+                
+                JMenuItem showAllCommands = new JMenuItem("Show All Commands                       Ctrl+Shift+P");
+                showAllCommands.setForeground(Color.WHITE);
+                showAllCommands.setBackground(new Color(28, 28, 28));
+                showAllCommands.addActionListener(e -> System.out.println("Show All Commands selected"));
+                helpMenu.add(showAllCommands);
+                
+                JMenuItem documentation = new JMenuItem("Documentation");
+                documentation.setForeground(Color.WHITE);
+                documentation.setBackground(new Color(28, 28, 28));
+                documentation.addActionListener(e -> System.out.println("Documentation selected"));
+                helpMenu.add(documentation);
+                
+                menu.add(helpMenu);
+            } else {
+                JMenuItem item = new JMenuItem(opcion);
+                item.setForeground(Color.WHITE); // Establecer el color del texto de las opciones del menú
+                item.setPreferredSize(new Dimension(250, 30));
+                item.setBackground(new Color(28, 28, 28)); // Establecer el color de fondo de las opciones del menú
+                item.addActionListener(e -> {
+                    String[] words = opcion.split("\\s+"); // Dividir la opción en palabras usando espacios como delimitador
+                    System.out.println(words[0] + " selected"); // Imprimir solo la primera palabra de la opción
+                });
+                menu.add(item);
+            }
+        }
+    
+        boton.addMouseListener(new MouseAdapter() {
+            private boolean menuVisible = false;
+    
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+    
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setCursor(Cursor.getDefaultCursor());
+            }
+    
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (menuVisible) {
+                    menu.setVisible(false);
+                } else {
+                    menu.show(boton, 0, boton.getHeight());
+                }
+                menuVisible = !menuVisible;
+            }
+        });
+        
+        JButton Run = new JButton("▷");
+        Run.setBounds(730, 5, 50, 20);
+        Run.setForeground(Color.GRAY);
+        Run.setBorderPainted(false);
+        Run.setFocusPainted(false);
+        Run.setContentAreaFilled(false);
+        Run.addActionListener(e -> System.out.println("Running  Code..."));
+        Run.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                Run.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            
+            public void mouseExited(MouseEvent e) {
+                Run.setCursor(Cursor.getDefaultCursor());
+            }
+        });
+
+        panelS.add(Run);
+
+        panelS.add(boton);
     }
 
 
@@ -628,6 +793,148 @@ public class App extends JFrame {
         int width = panelDesplegado.getWidth();
         
         return (x < borderSize || x > width - borderSize);
+    }
+
+    private void panelTerminal() {
+        panelTerminal.setBackground(new Color(30, 30, 30));
+        panelTerminal.setBounds(55, 726, 750, 200); // Comienza fuera de la vista
+        panelTerminal.setLayout(null);
+        panelTerminal.setVisible(false); // Por defecto, el panel de la terminal está oculto
+        panelBackground.add(panelTerminal);
+    
+        JLabel problemsLabel = new JLabel("PROBLEMS");
+    problemsLabel.setBounds(10, 0, 80, 20);
+    problemsLabel.setForeground(new Color(85,85,85));
+    JLabel outputLabel = new JLabel("OUTPUT");
+    outputLabel.setBounds(100, 0, 60, 20);
+    outputLabel.setForeground(new Color(85,85,85));
+    JLabel debugConsoleLabel = new JLabel("DEBUG CONSOLE");
+    debugConsoleLabel.setBounds(170, 0, 110, 20);
+    debugConsoleLabel.setForeground(new Color(85,85,85));
+    JLabel terminalLabel = new JLabel("TERMINAL");
+    terminalLabel.setBounds(290, 0, 85, 20);
+    terminalLabel.setForeground(new Color(85,85,85));
+    JLabel portsLabel = new JLabel("PORTS");
+    portsLabel.setBounds(370, 0, 60, 20);
+    portsLabel.setForeground(new Color(85,85,85));
+    JLabel commentsLabel = new JLabel("COMMENTS");
+    commentsLabel.setBounds(450, 0, 90, 20);
+    commentsLabel.setForeground(new Color(85,85,85));
+
+    panelTerminal.add(problemsLabel);
+    panelTerminal.add(outputLabel);
+    panelTerminal.add(debugConsoleLabel);
+    panelTerminal.add(terminalLabel);
+    panelTerminal.add(portsLabel);
+    panelTerminal.add(commentsLabel);
+    
+        JButton closeButton = new JButton("X");
+        closeButton.setBounds(690, 0, 44, 20);
+        closeButton.setBackground(new Color(30, 30, 30));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setBorderPainted(false);
+        closeButton.setFocusPainted(false);
+        closeButton.addActionListener(e -> panelTerminal.setVisible(false));
+        panelTerminal.add(closeButton);
+    
+        JButton maximizeButton = new JButton("︿");
+        maximizeButton.setBounds(646, 0, 50, 20);
+        maximizeButton.setBackground(new Color(30, 30, 30));
+        maximizeButton.setForeground(Color.WHITE);
+        maximizeButton.setBorderPainted(false);
+        maximizeButton.setFocusPainted(false);
+        maximizeButton.addActionListener(e -> toggleMaximizeTerminalPanel(maximizeButton));
+        panelTerminal.add(maximizeButton);
+    
+        terminalTextArea = new JTextArea("PS C:\\Users\\User\\Escritorio\\Punto3\\Punto3>  ");
+        terminalTextArea.setBackground(new Color(30, 30, 30));
+        terminalTextArea.setForeground(Color.WHITE);
+        terminalTextArea.setCaretColor(Color.WHITE);
+        terminalTextArea.setBounds(0, 30, 750, 170);
+        terminalTextArea.setEditable(true);
+        terminalTextArea.setLineWrap(true);
+        terminalTextArea.setFocusable(true);
+        terminalTextArea.setDisabledTextColor(Color.WHITE); // Para asegurar que el texto predefinido sea blanco
+        panelTerminal.add(terminalTextArea);
+        
+
+        JButton clearButton = new JButton("Clear");
+        clearButton.setBounds(585, 0, 65, 20);
+        clearButton.setBackground(new Color(30, 30, 30));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBorderPainted(false);
+        clearButton.setFocusPainted(false);
+        clearButton.addActionListener(e -> terminalTextArea.setText("PS C:\\Users\\User\\Escritorio\\Punto3\\Punto3>    "));
+        panelTerminal.add(clearButton);
+        
+        
+        panelTerminal.add(terminalTextArea);
+    
+        panelTerminal.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getY() >= panelTerminal.getHeight() - 10) {
+                    resizing = true;
+                    prevMouseY = e.getYOnScreen();
+                }
+            }
+    
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                resizing = false;
+            }
+        });
+    
+        panelTerminal.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (resizing) {
+                    int mouseY = e.getYOnScreen();
+                    int deltaY = mouseY - prevMouseY;
+                    int newHeight = panelTerminal.getHeight() + deltaY;
+                    int newY = panelTerminal.getY() - deltaY;
+    
+                    if (newY >= 30 && newY <= 526) {
+                        panelTerminal.setBounds(55, newY, 750, newHeight);
+                        panelDesplegado.setBounds(55, 30, 750, newY - 30);
+                        prevMouseY = mouseY;
+                    }
+                }
+            }
+    
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (e.getY() >= panelTerminal.getHeight() - 10) {
+                    panelTerminal.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                } else {
+                    panelTerminal.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
+    }
+    
+    private void toggleTerminalPanel() {
+        if (panelTerminal.isVisible()) {
+            panelTerminal.setVisible(false);
+            panelDesplegado.setBounds(55, 30, 750, 696); // Restaurar el tamaño original de panelDesplegado
+        } else {
+            panelTerminal.setVisible(true);
+            panelTerminal.setBounds(55, 526, 750, 200); // Posicionar el panelTerminal en su ubicación visible
+            panelDesplegado.setBounds(55, 30, 750, 496); // Ajustar el tamaño de panelDesplegado
+        }
+    }
+    
+    private void toggleMaximizeTerminalPanel(JButton maximizeButton) {
+        if (isMaximized) {
+            panelTerminal.setBounds(55, 526, 750, 200); // Restaurar tamaño original
+            panelDesplegado.setBounds(55, 30, 750, 496); // Restaurar tamaño original
+            maximizeButton.setText("︿");
+        } else {
+            panelTerminal.setBounds(55, 30, 750, 696); // Maximizar el panel de la terminal
+            panelDesplegado.setBounds(55, 726, 750, 0); // Ajustar el tamaño de panelDesplegado
+            maximizeButton.setText("﹀");
+        }
+        isMaximized = !isMaximized;
     }
 
     public static void main(String[] args) {
