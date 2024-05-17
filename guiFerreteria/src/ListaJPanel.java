@@ -89,7 +89,11 @@ public class ListaJPanel extends javax.swing.JPanel {
         jButtonEstadistica.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButtonEstadistica.setContentAreaFilled(false);
         jButtonEstadistica.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
+        jButtonEstadistica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEstadisticaActionPerformed(evt);
+            }
+        });
 
         jLabeltitulo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 3, 36)); // NOI18N
         jLabeltitulo.setText("Inventario Ferreteria Tuluá Valle");
@@ -427,7 +431,10 @@ public class ListaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    // Boton que muestra las estadisticas de los productos en el inventario 
+    private void jButtonEstadisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEstadisticaActionPerformed
+        mostrarEstadisticas(productos);
+    }//GEN-LAST:event_jButtonEstadisticaActionPerformed
 
     //Boton que actualiza los datos de un producto
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
@@ -628,7 +635,6 @@ public class ListaJPanel extends javax.swing.JPanel {
             }
             listarInventario();
         }
-
     }
 
     //Funcion de una excepcion para cuando se cancela o se acepte un campo vacio
@@ -755,7 +761,136 @@ public class ListaJPanel extends javax.swing.JPanel {
         listarInventario();
         }   
     }
+    
+    //Funcion que muestra las estaditicas
+    public void mostrarEstadisticas(ArrayList<Producto>productos) {
+        // a. Calcular el precio total de todos los productos en inventario
+        
+        int precioTotal = calcularPrecioTotal(productos);
 
+        // b. Encontrar los 2 productos con más stock y los 2 con menos stock
+        ArrayList<Producto> productosMasStock = encontrarProductosMasStock(productos);
+        ArrayList<Producto> productosMenosStock = encontrarProductosMenosStock(productos);
+
+        // c. Encontrar las herramientas que más se usan para los productos
+        ArrayList<String>herramientaMasUsada = encontrarHerramientasMasUsadas(productos);
+        // Convertir cada herramienta a minúsculas para comparación
+        if (productosMasStock.isEmpty() || productosMenosStock.isEmpty() || herramientaMasUsada.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El inventario se enuentra vacio", "Atencion!!!", JOptionPane.INFORMATION_MESSAGE);
+        } else{
+            // Mostrar estadísticas en un JOptionPane
+            String mensaje = "Estadísticas del inventario:\n\n" +
+                    "Precio total de todos los productos: " + precioTotal + "\n\n" +
+                    "Productos con más stock:\n" + convertirAString(productosMasStock) + "\n\n" +
+                    "Productos con menos stock:\n" + convertirAString(productosMenosStock) + "\n\n" +
+                    "Herramienta más usada para los productos:\n "+ herramientaMasUsada + "\n\n";
+            
+            JOptionPane.showMessageDialog(null, mensaje, "Estadísticas del inventario", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    //Funcion para calcular el precio total
+    private int calcularPrecioTotal(ArrayList<Producto>productos) {
+        int precioTotal = 0;
+        for (Producto producto : productos) {
+            precioTotal += producto.getPrecio() * producto.getCantidad();
+        }
+        return precioTotal;
+    }
+    //Funcion para encontrar los productos con mas stock
+    private ArrayList<Producto> encontrarProductosMasStock(ArrayList<Producto>productos) {
+        ArrayList<Producto> productosMasStock = new ArrayList<>();
+        Producto max1 = null, max2 = null;
+
+        for (Producto producto : productos) {
+            if (max1 == null || producto.getCantidad() > max1.getCantidad()) {
+                max2 = max1;
+                max1 = producto;
+            } else if (max2 == null || producto.getCantidad() > max2.getCantidad()) {
+                max2 = producto;
+            }
+        }
+
+        if (max1 != null) {
+            productosMasStock.add(max1);
+        }
+        if (max2 != null) {
+            productosMasStock.add(max2);
+        }
+
+        return productosMasStock;
+    }
+    //Funcion para encontrar los productos con menos stock
+    private ArrayList<Producto>encontrarProductosMenosStock(ArrayList<Producto>productos) {
+        ArrayList<Producto>productosMenosStock = new ArrayList<>();
+        Producto min1 = null, min2 = null;
+
+        for (Producto producto : productos) {
+            if (min1 == null || producto.getCantidad() < min1.getCantidad()) {
+                min2 = min1;
+                min1 = producto;
+            } else if (min2 == null || producto.getCantidad() < min2.getCantidad()) {
+                min2 = producto;
+            }
+        }
+
+        if (min1 != null) {
+            productosMenosStock.add(min1);
+        }
+        if (min2 != null) {
+            productosMenosStock.add(min2);
+        }
+
+        return productosMenosStock;
+    }
+    
+    //Funcion para encontrar las herramientas mas usadas
+    private static ArrayList<String> encontrarHerramientasMasUsadas(ArrayList<Producto> productos) {
+        // Inicializar variables para almacenar las herramientas más usadas
+        ArrayList<String> herramientasMasUsadas = new ArrayList<>();
+        int maximaCantidad = 0;
+        
+        // Iterar a través de la lista de productos
+        for (Producto producto : productos) {
+            // Contar las ocurrencias de cada herramienta
+            int cantidad = contarHerramienta(productos, producto);
+            
+            // Actualizar las herramientas más usadas y maximaCantidad
+            if (cantidad > maximaCantidad) {
+                herramientasMasUsadas.clear();
+                herramientasMasUsadas.add(producto.getHerramienta());
+                maximaCantidad = cantidad;
+            } else if (cantidad == maximaCantidad && !herramientasMasUsadas.contains(producto.getHerramienta())) {
+                herramientasMasUsadas.add(producto.getHerramienta());
+            }
+        }
+        
+        return herramientasMasUsadas;
+    }
+    
+    // Método auxiliar para contar las ocurrencias de una herramienta en la lista de productos
+    private static int contarHerramienta(ArrayList<Producto> productos, Producto producto) {
+        int cantidad = 0;
+        for (Producto p : productos) {
+            if (p.getHerramienta().equalsIgnoreCase(producto.getHerramienta())) {
+                cantidad++;
+            }
+        }
+        return cantidad;
+    }
+
+    //Funcion para que se convierta en string
+    private static String convertirAString(ArrayList<Producto> productos) {
+        String resultado = "";
+        if (productos != null) {
+            for (Producto producto : productos) {
+                resultado += "Nombre: " + producto.getNombre() + "\n";
+                resultado += "Descripción: " + producto.getDescripcion() + "\n";
+                resultado += "Cantidad: " + producto.getCantidad() + " unidades\n\n";
+            }
+        }
+        return resultado;
+    }
 
     //Funcion para buscar por codigo el producto
     public void buscarProductoPorCodigo(int codigoBusqueda) {

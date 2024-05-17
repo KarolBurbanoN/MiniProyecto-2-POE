@@ -23,7 +23,7 @@ public class principalJFrame extends javax.swing.JFrame {
     //@SuppressWarnings("unchecked")
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    /**
+     /**
      * Este método inicializa los componentes del JFrame.
      */
     private void initComponents() {
