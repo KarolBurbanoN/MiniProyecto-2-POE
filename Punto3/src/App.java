@@ -10,16 +10,13 @@ public class App extends JFrame {
     private boolean isMaximized = false;
     private boolean resizing = false;
     private int prevMouseY;
-    private Point initialClick;
-    private Dimension initialSize;
-    private boolean isResizing = false;
     Font fuente = new Font("Aptos",Font.BOLD, 13);
 
     public App() {
         frame = new JFrame("Visual Studio");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
-        frame.setSize(800, 726);
+        frame.setSize(1300, 750);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
@@ -45,14 +42,14 @@ public class App extends JFrame {
 
     private void panelBackground(){
         panelBackground.setBackground(Color.WHITE);
-        panelBackground.setSize(800,726);
+        panelBackground.setSize(1300,750);
         panelBackground.setLayout(null);
         frame.add(panelBackground);
     }
 
     private void panelIzquierdo() {
         panelI.setBackground(new Color(24, 24, 24));
-        panelI.setBounds(0, 30, 55, 726);
+        panelI.setBounds(0, 30, 55, 750);
         panelI.setLayout(null);
         panelBackground.add(panelI);
     
@@ -62,7 +59,7 @@ public class App extends JFrame {
 
     private void panelSuperior() {
         panelS.setBackground(new Color(24, 24, 24));
-        panelS.setBounds(0, 0, 800, 30);
+        panelS.setBounds(0, 0, 1300, 30);
         panelS.setLayout(null);
 
         ImageIcon icon = new ImageIcon("iconos/Visual_icon.png"); // Cambia la ruta por la ubicación de tu imagen
@@ -80,7 +77,7 @@ public class App extends JFrame {
 
     private void panelCentral(){
         panelC.setBackground(new Color(28, 28, 28));
-        panelC.setBounds(55, 30, 745, 726);
+        panelC.setBounds(55, 30, 1245, 720);
         panelC.setLayout(null);
         panelBackground.add(panelC);
 
@@ -90,7 +87,7 @@ public class App extends JFrame {
         textArea.setForeground(Color.WHITE); // Cambia el color del texto a blanco
 
         JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setBounds(0, 0, 730, 656);
+        scroll.setBounds(0, 0, 1229, 682);
         scroll.setPreferredSize(new Dimension(10, 65)); // Establece un tamaño preferido para el JScrollPane
 
         scroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -137,7 +134,6 @@ public class App extends JFrame {
         agregarBotonConMenu("...", 425, 70, new String[]{
             "Terminal", "Help"
         });
-        
     }
 
     private void agregarBotonConMenu(String titulo, int x, int ancho, String[] opciones) {
@@ -236,9 +232,9 @@ public class App extends JFrame {
                 menuVisible = !menuVisible;
             }
         });
-        
+
         JButton Run = new JButton("▷");
-        Run.setBounds(730, 5, 50, 20);
+        Run.setBounds(1240, 5, 50, 20);
         Run.setForeground(Color.GRAY);
         Run.setBorderPainted(false);
         Run.setFocusPainted(false);
@@ -255,7 +251,7 @@ public class App extends JFrame {
         });
 
         panelS.add(Run);
-
+    
         panelS.add(boton);
     }
 
@@ -273,12 +269,12 @@ public class App extends JFrame {
         Explorer.setContentAreaFilled(false);
         Explorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
+                togglePanelDesplegado();
                 if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
+                    botonesPanelExplorer();
                 }
             }
-        });
+    });
         Explorer.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 Explorer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -301,9 +297,9 @@ public class App extends JFrame {
         Search.setContentAreaFilled(false);
         Search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
+                togglePanelDesplegado();
                 if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
+                    botonesPanelSearch();
                 }
             }
         });
@@ -331,9 +327,7 @@ public class App extends JFrame {
         Source_Control.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
-                }
+                ajustarPaneles();
             }
         });
         Source_Control.addMouseListener(new MouseAdapter() {
@@ -360,9 +354,7 @@ public class App extends JFrame {
         Run_Debug.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
-                }
+                ajustarPaneles();
             }
         });
         Run_Debug.addMouseListener(new MouseAdapter() {
@@ -390,9 +382,7 @@ public class App extends JFrame {
         Extensions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
-                }
+                ajustarPaneles();
             }
         });
         Extensions.addMouseListener(new MouseAdapter() {
@@ -419,9 +409,7 @@ public class App extends JFrame {
         Testing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
-                }
+                ajustarPaneles();
             }
         });
         Testing.addMouseListener(new MouseAdapter() {
@@ -448,9 +436,7 @@ public class App extends JFrame {
         Tabnine_AI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panelDesplegado.setVisible(!panelDesplegado.isVisible()); // Alternar visibilidad
-                if (panelDesplegado.isVisible()) {
-                    panelDesplegado.setSize(210, panelDesplegado.getHeight()); // Establecer ancho inicial de 100
-                }
+                ajustarPaneles();
             }
         });
         Tabnine_AI.addMouseListener(new MouseAdapter() {
@@ -494,7 +480,7 @@ public class App extends JFrame {
         ImageIcon iconoe9 = new ImageIcon(imagen9);
 
         JButton Account = new JButton(iconoe9);
-        Account.setBounds(0, 550, 55, 55); 
+        Account.setBounds(0, 570, 55, 55); 
         Account.setPreferredSize(new Dimension(iconoe.getIconWidth(), iconoe.getIconHeight()));
         Account.setBorderPainted(false);
         Account.setFocusPainted(false);
@@ -520,7 +506,7 @@ public class App extends JFrame {
         ImageIcon iconoe10 = new ImageIcon(imagen10);
 
         JButton Config = new JButton(iconoe10);
-        Config.setBounds(0, 605, 55, 55); 
+        Config.setBounds(0, 620, 55, 55); 
         Config.setPreferredSize(new Dimension(iconoe.getIconWidth(), iconoe.getIconHeight()));
         Config.setBorderPainted(false);
         Config.setFocusPainted(false);
@@ -729,171 +715,232 @@ public class App extends JFrame {
     
     
     private void panelDesplegado() {
-        panelDesplegado.setBackground(new Color(24,24,24));
-        panelDesplegado.setBounds(50, 30, 100, 800); // Establecer ancho inicial de 100
+        panelDesplegado.setBackground(new Color(26,26,26));
+        panelDesplegado.setBounds(55, 30, 250, 800); // Establecer ancho inicial de 250
+        panelDesplegado.setLayout(null);
         panelDesplegado.setVisible(false);
-        
-        panelDesplegado.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                initialClick = e.getPoint();
-                initialSize = panelDesplegado.getSize();
-                isResizing = isCursorNearBorder(e);
-                if (isResizing) {
-                    panelDesplegado.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-                }
-            }
-            
-            public void mouseReleased(MouseEvent e) {
-                isResizing = false;
-                panelDesplegado.setCursor(Cursor.getDefaultCursor());
-            }
-        });
-        
-        panelDesplegado.addMouseMotionListener(new MouseAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                if (isResizing) {
-                    int dx = e.getX() - initialClick.x;
-                    int dy = e.getY() - initialClick.y;
-                    
-                    int newWidth = initialSize.width + dx;
-                    int newHeight = initialSize.height + dy;
-                    
-                    panelDesplegado.setSize(newWidth, newHeight);
-                    
-                    if (panelDesplegado.getWidth() <= 0) {
-                        panelDesplegado.setVisible(false);
-                        panelDesplegado.setSize(100, panelDesplegado.getHeight()); // Establecer ancho inicial de 100 al cerrar
-                    }
-                } else {
-                    int thisX = frame.getLocation().x;
-                    int thisY = frame.getLocation().y;
-                    int xMoved = (thisX + e.getX()) - (thisX + initialClick.x);
-                    int yMoved = (thisY + e.getY()) - (thisY + initialClick.y);
-                    int X = thisX + xMoved;
-                    int Y = thisY + yMoved;
-                    frame.setLocation(X, Y);
-                }
-            }
-            
-            public void mouseMoved(MouseEvent e) {
-                if (isCursorNearBorder(e)) {
-                    panelDesplegado.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-                } else {
-                    panelDesplegado.setCursor(Cursor.getDefaultCursor());
-                }
-            }
-        });
-
         panelBackground.add(panelDesplegado);
     }
-    
-    private boolean isCursorNearBorder(MouseEvent e) {
-        int borderSize = 5; // Tamaño del borde para el redimensionamiento
-        int x = e.getX();
-        int width = panelDesplegado.getWidth();
-        
-        return (x < borderSize || x > width - borderSize);
+
+    private void togglePanelDesplegado() {
+        if (panelDesplegado.isVisible()) {
+            panelDesplegado.setVisible(false);
+            panelDesplegado.removeAll(); // Limpiar los componentes del panel
+            panelDesplegado.revalidate();
+            panelDesplegado.repaint();
+            ajustarPaneles();
+        } else {
+            panelDesplegado.setVisible(true);
+            ajustarPaneles();
+        }
     }
 
+    private void botonesPanelExplorer(){
+        JLabel ExplorerLabel = new JLabel("EXPLORER");
+        ExplorerLabel.setBounds(15,10,80,20);
+        ExplorerLabel.setForeground(Color.WHITE);
+        panelDesplegado.add(ExplorerLabel);
+
+        JLabel dotsLabel = new JLabel("...");
+        dotsLabel.setBounds(200, 10, 30, 20);
+        dotsLabel.setForeground(Color.WHITE);
+        panelDesplegado.add(dotsLabel);
+
+        JButton button = new JButton("﹥ OPEN EDITORS");
+        button.setBackground(new Color(26,26,26));
+        button.setBounds(15, 30, 200, 20);
+        button.setForeground(Color.WHITE);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        panelDesplegado.add(button);
+
+        JButton button2 = new JButton("﹥ UNTITLED (WORKSPACE)");
+        button2.setBackground(new Color(26,26,26));
+        button2.setBounds(15, 50, 200, 20);
+        button2.setForeground(Color.WHITE);
+        button2.setBorderPainted(false);
+        button2.setFocusPainted(false);
+        button2.setHorizontalAlignment(SwingConstants.LEFT);
+        button2.setMargin(new Insets(0, 0, 0, 0));
+        panelDesplegado.add(button2);
+
+        JButton button3 = new JButton("﹥ OUTLINE");
+        button3.setBackground(new Color(26,26,26));
+        button3.setBounds(15, 70, 200, 20);
+        button3.setForeground(Color.WHITE);
+        button3.setBorderPainted(false);
+        button3.setFocusPainted(false);
+        button3.setHorizontalAlignment(SwingConstants.LEFT);
+        button3.setMargin(new Insets(0, 0, 0, 0));
+        panelDesplegado.add(button3);
+
+        JButton button4 = new JButton("﹥ TIMELINE");
+        button4.setBackground(new Color(26,26,26));
+        button4.setBounds(15, 90, 200, 20);
+        button4.setForeground(Color.WHITE);
+        button4.setBorderPainted(false);
+        button4.setFocusPainted(false);
+        button4.setHorizontalAlignment(SwingConstants.LEFT);
+        button4.setMargin(new Insets(0, 0, 0, 0));
+        panelDesplegado.add(button4);
+
+        JButton button5 = new JButton("﹥ JAVA PROJECTS");
+        button5.setBackground(new Color(26,26,26));
+        button5.setBounds(15, 110, 200, 20);
+        button5.setForeground(Color.WHITE);
+        button5.setBorderPainted(false);
+        button5.setFocusPainted(false);
+        button5.setHorizontalAlignment(SwingConstants.LEFT);
+        button5.setMargin(new Insets(0, 0, 0, 0));
+        panelDesplegado.add(button5);
+    }
+
+    private void botonesPanelSearch(){
+        JLabel searchLabel = new JLabel("SEARCH");
+        searchLabel.setForeground(Color.WHITE);
+        searchLabel.setBounds(15, 10, 80, 20);
+        panelDesplegado.add(searchLabel);
+
+        ImageIcon icon = new ImageIcon("iconos/ButtonSearch.png"); // Cambia la ruta por la ubicación de tu imagen
+        JLabel icons = new JLabel();
+        icons.setBounds(100, 10, 135, 20);
+        icons.setIcon(new ImageIcon(icon.getImage().getScaledInstance(icons.getWidth(),icons.getHeight(), Image.SCALE_SMOOTH)));
+        panelDesplegado.add(icons);
+
+        JTextField searchField = new JTextField("Search");
+        searchField.setBounds(15, 40, 225, 30);
+        searchField.setBackground(new Color(40,40,40));
+        searchField.setBorder(null);
+        searchField.setForeground(Color.WHITE); // Cambia el color del texto a blanco
+        panelDesplegado.add(searchField);
+
+        JTextField replaceField = new JTextField("Replace");
+        replaceField.setBounds(15, 80, 225, 30);
+        replaceField.setBackground(new Color(30,30,30));
+        replaceField.setBorder(null);
+        replaceField.setForeground(Color.WHITE);
+        panelDesplegado.add(replaceField);
+    }
+
+    private void ajustarPaneles() {
+        int anchoPanelDesplegado = panelDesplegado.isVisible() ? panelDesplegado.getWidth() : 0;
+        int anchoPanelC = panelBackground.getWidth() - anchoPanelDesplegado - 55;
+        
+        // Ajustar panelC
+        panelC.setBounds(55 + anchoPanelDesplegado, 30, anchoPanelC, panelC.getHeight());
+        
+        // Ajustar panelTerminal
+        if (isMaximized) {
+            panelTerminal.setBounds(55 + anchoPanelDesplegado, 30, anchoPanelC, panelBackground.getHeight() - 30);
+        } else {
+            panelTerminal.setBounds(55 + anchoPanelDesplegado, 526, anchoPanelC, panelTerminal.getHeight());
+        }
+    }
+    
     private void panelTerminal() {
         panelTerminal.setBackground(new Color(30, 30, 30));
-        panelTerminal.setBounds(55, 726, 750, 200); // Comienza fuera de la vista
+        panelTerminal.setBounds(55, 726, 1245, 200); // Comienza fuera de la vista
         panelTerminal.setLayout(null);
         panelTerminal.setVisible(false); // Por defecto, el panel de la terminal está oculto
         panelBackground.add(panelTerminal);
-    
-        JLabel problemsLabel = new JLabel("PROBLEMS");
-    problemsLabel.setBounds(10, 0, 80, 20);
-    problemsLabel.setForeground(new Color(85,85,85));
-    JLabel outputLabel = new JLabel("OUTPUT");
-    outputLabel.setBounds(100, 0, 60, 20);
-    outputLabel.setForeground(new Color(85,85,85));
-    JLabel debugConsoleLabel = new JLabel("DEBUG CONSOLE");
-    debugConsoleLabel.setBounds(170, 0, 110, 20);
-    debugConsoleLabel.setForeground(new Color(85,85,85));
-    JLabel terminalLabel = new JLabel("TERMINAL");
-    terminalLabel.setBounds(290, 0, 85, 20);
-    terminalLabel.setForeground(new Color(85,85,85));
-    JLabel portsLabel = new JLabel("PORTS");
-    portsLabel.setBounds(370, 0, 60, 20);
-    portsLabel.setForeground(new Color(85,85,85));
-    JLabel commentsLabel = new JLabel("COMMENTS");
-    commentsLabel.setBounds(450, 0, 90, 20);
-    commentsLabel.setForeground(new Color(85,85,85));
 
-    panelTerminal.add(problemsLabel);
-    panelTerminal.add(outputLabel);
-    panelTerminal.add(debugConsoleLabel);
-    panelTerminal.add(terminalLabel);
-    panelTerminal.add(portsLabel);
-    panelTerminal.add(commentsLabel);
+        JLabel problemsLabel = new JLabel("PROBLEMS");
+        problemsLabel.setBounds(10, 0, 80, 20);
+        problemsLabel.setForeground(new Color(85,85,85));
+        JLabel outputLabel = new JLabel("OUTPUT");
+        outputLabel.setBounds(100, 0, 60, 20);
+        outputLabel.setForeground(new Color(85,85,85));
+        JLabel debugConsoleLabel = new JLabel("DEBUG CONSOLE");
+        debugConsoleLabel.setBounds(170, 0, 110, 20);
+        debugConsoleLabel.setForeground(new Color(85,85,85));
+        JLabel terminalLabel = new JLabel("TERMINAL");
+        terminalLabel.setBounds(290, 0, 85, 20);
+        terminalLabel.setForeground(new Color(85,85,85));
+        JLabel portsLabel = new JLabel("PORTS");
+        portsLabel.setBounds(370, 0, 60, 20);
+        portsLabel.setForeground(new Color(85,85,85));
+        JLabel commentsLabel = new JLabel("COMMENTS");
+        commentsLabel.setBounds(450, 0, 90, 20);
+        commentsLabel.setForeground(new Color(85,85,85));
+
+        panelTerminal.add(problemsLabel);
+        panelTerminal.add(outputLabel);
+        panelTerminal.add(debugConsoleLabel);
+        panelTerminal.add(terminalLabel);
+        panelTerminal.add(portsLabel);
+        panelTerminal.add(commentsLabel);
     
         JButton closeButton = new JButton("X");
-        closeButton.setBounds(690, 0, 44, 20);
         closeButton.setBackground(new Color(30, 30, 30));
         closeButton.setForeground(Color.WHITE);
         closeButton.setBorderPainted(false);
         closeButton.setFocusPainted(false);
         closeButton.addActionListener(e -> panelTerminal.setVisible(false));
         panelTerminal.add(closeButton);
-    
+
         JButton maximizeButton = new JButton("︿");
-        maximizeButton.setBounds(646, 0, 50, 20);
         maximizeButton.setBackground(new Color(30, 30, 30));
         maximizeButton.setForeground(Color.WHITE);
         maximizeButton.setBorderPainted(false);
         maximizeButton.setFocusPainted(false);
         maximizeButton.addActionListener(e -> toggleMaximizeTerminalPanel(maximizeButton));
         panelTerminal.add(maximizeButton);
-    
-        terminalTextArea = new JTextArea("PS C:\\Users\\User\\Escritorio\\Punto3\\Punto3>  ");
-        terminalTextArea.setBackground(new Color(30, 30, 30));
-        terminalTextArea.setForeground(Color.WHITE);
-        terminalTextArea.setCaretColor(Color.WHITE);
-        terminalTextArea.setBounds(0, 30, 750, 170);
-        terminalTextArea.setEditable(true);
-        terminalTextArea.setLineWrap(true);
-        terminalTextArea.setFocusable(true);
-        terminalTextArea.setDisabledTextColor(Color.WHITE); // Para asegurar que el texto predefinido sea blanco
-        panelTerminal.add(terminalTextArea);
-        
 
         JButton clearButton = new JButton("Clear");
-        clearButton.setBounds(585, 0, 65, 20);
         clearButton.setBackground(new Color(30, 30, 30));
         clearButton.setForeground(Color.WHITE);
         clearButton.setBorderPainted(false);
         clearButton.setFocusPainted(false);
         clearButton.addActionListener(e -> terminalTextArea.setText("PS C:\\Users\\User\\Escritorio\\Punto3\\Punto3>    "));
         panelTerminal.add(clearButton);
-        
-        
-        panelTerminal.add(terminalTextArea);
+
+        // Definir anchos específicos para los botones
+        int closeButtonWidth = 50;
+        int maximizeButtonWidth = 50;
+        int clearButtonWidth = 65; // Ancho independiente para el botón "Clear"
+        int buttonHeight = 20;
+        int spacing = 5;
+
+        // Posicionar los botones en la parte superior derecha del panel
+        closeButton.setBounds(panelTerminal.getWidth() - (closeButtonWidth + spacing), 0, closeButtonWidth, buttonHeight);
+        maximizeButton.setBounds(panelTerminal.getWidth() - (closeButtonWidth + maximizeButtonWidth + 2 * spacing), 0, maximizeButtonWidth, buttonHeight);
+        clearButton.setBounds(panelTerminal.getWidth() - (closeButtonWidth + maximizeButtonWidth + clearButtonWidth + 3 * spacing), 0, clearButtonWidth, buttonHeight);
+
     
+        terminalTextArea = new JTextArea("PS C:\\Users\\User\\Escritorio\\Punto3\\Punto3>  ");
+        terminalTextArea.setBackground(new Color(30, 30, 30));
+        terminalTextArea.setForeground(Color.WHITE);
+        terminalTextArea.setCaretColor(Color.WHITE);
+        terminalTextArea.setBounds(0, 30, panelTerminal.getWidth(), panelTerminal.getHeight() - 30);
+        terminalTextArea.setEditable(true);
+        terminalTextArea.setLineWrap(true);
+        terminalTextArea.setFocusable(true);
+        terminalTextArea.setDisabledTextColor(Color.WHITE); // Para asegurar que el texto predefinido sea blanco
+        panelTerminal.add(terminalTextArea);
+
         panelTerminal.addMouseListener(new MouseAdapter() {
-            @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getY() >= panelTerminal.getHeight() - 10) {
                     resizing = true;
                     prevMouseY = e.getYOnScreen();
                 }
             }
-    
-            @Override
+
             public void mouseReleased(MouseEvent e) {
                 resizing = false;
             }
         });
-    
-        panelTerminal.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
+
+        panelTerminal.addMouseMotionListener(new MouseAdapter() {
             public void mouseDragged(MouseEvent e) {
                 if (resizing) {
                     int mouseY = e.getYOnScreen();
                     int deltaY = mouseY - prevMouseY;
                     int newHeight = panelTerminal.getHeight() + deltaY;
                     int newY = panelTerminal.getY() - deltaY;
-    
+
                     if (newY >= 30 && newY <= 526) {
                         panelTerminal.setBounds(55, newY, 750, newHeight);
                         panelDesplegado.setBounds(55, 30, 750, newY - 30);
@@ -901,8 +948,7 @@ public class App extends JFrame {
                     }
                 }
             }
-    
-            @Override
+
             public void mouseMoved(MouseEvent e) {
                 if (e.getY() >= panelTerminal.getHeight() - 10) {
                     panelTerminal.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
@@ -911,27 +957,39 @@ public class App extends JFrame {
                 }
             }
         });
+
+        panelTerminal.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = panelTerminal.getWidth();
+                closeButton.setBounds(width - (closeButtonWidth + spacing), 0, closeButtonWidth, buttonHeight);
+                maximizeButton.setBounds(width - (closeButtonWidth + maximizeButtonWidth + 2 * spacing), 0, maximizeButtonWidth, buttonHeight);
+                clearButton.setBounds(width - (closeButtonWidth + maximizeButtonWidth + clearButtonWidth + 3 * spacing), 0, clearButtonWidth, buttonHeight);
+                terminalTextArea.setBounds(0, 30, width, panelTerminal.getHeight() - 30);
+            }
+        });
     }
     
     private void toggleTerminalPanel() {
         if (panelTerminal.isVisible()) {
             panelTerminal.setVisible(false);
-            panelDesplegado.setBounds(55, 30, 750, 696); // Restaurar el tamaño original de panelDesplegado
         } else {
             panelTerminal.setVisible(true);
-            panelTerminal.setBounds(55, 526, 750, 200); // Posicionar el panelTerminal en su ubicación visible
-            panelDesplegado.setBounds(55, 30, 750, 496); // Ajustar el tamaño de panelDesplegado
+            panelTerminal.setBounds(55, 526, 1230, 200); // Posicionar el panelTerminal en su ubicación visible
         }
     }
     
     private void toggleMaximizeTerminalPanel(JButton maximizeButton) {
         if (isMaximized) {
-            panelTerminal.setBounds(55, 526, 750, 200); // Restaurar tamaño original
-            panelDesplegado.setBounds(55, 30, 750, 496); // Restaurar tamaño original
+            // Restaurar tamaño original
+            panelTerminal.setBounds(55 + (panelDesplegado.isVisible() ? panelDesplegado.getWidth() : 0), 526, 
+                                    panelBackground.getWidth() - 55 - (panelDesplegado.isVisible() ? panelDesplegado.getWidth() : 0), 200);
             maximizeButton.setText("︿");
         } else {
-            panelTerminal.setBounds(55, 30, 750, 696); // Maximizar el panel de la terminal
-            panelDesplegado.setBounds(55, 726, 750, 0); // Ajustar el tamaño de panelDesplegado
+            // Maximizar el panel de la terminal
+            panelTerminal.setBounds(55 + (panelDesplegado.isVisible() ? panelDesplegado.getWidth() : 0), 30, 
+                                    panelBackground.getWidth() - 55 - (panelDesplegado.isVisible() ? panelDesplegado.getWidth() : 0), 
+                                    panelBackground.getHeight() - 30);
             maximizeButton.setText("﹀");
         }
         isMaximized = !isMaximized;
